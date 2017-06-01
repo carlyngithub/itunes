@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>iTunes API Tutorial</title>
+    <link rel="shortcut icon" href="http://findicons.com/files/icons/2770/ios_7_icons/512/music.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="itunes.css">
+</head>
+
+<body>
+    <!--<h1>Make Something with the iTunes API!</h1>
+    <h3> <a href="https://affiliate.itunes.apple.com/resources/documentation/itunes-store-web-service-search-api/#searchexamples">
+            Some Examples
+        </a>
+    </h3>
+    <h3>
+        Requirements:
+    </h3>
+    <ul>
+        <li>Add Bootstrap</li>
+        <li>Look at the NY Times Example</li>
+        <li>Make it look pretty:)</li>
+    </ul>-->
+
+
+    <div id="searchBox">
+        <label></label> <input id="name" type="text" name="search" placeholder="search" <br>
+        <input class="button" onclick="searchResults()" type="submit" value="Submit">
+        <div class="searchFunction">
+        </div>
+        <div>
+            <!--<img src=https://m.popkey.co/2cdaa7/RkoYd_s-200x150.gif>-->
+        </div>
+        <ul id="results">
+        </ul>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+        <script>
+            // $(document).ready(... This is jQuery function that runs when the page is loaded.
+            // Do you want to load when the page is ready or when some button is clicked?
+            // Are you waiting for an input from the user???
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    searchResults();
+                } //call function on enter
+            });
+            function searchResults() {
+                var inputValue = $('#searchBox').find('input[name="search"]').val();
+                inputValue = inputValue.replace(/[^0-9a-zA-Z]/g, '+');
+                $("#results").html("<img src=https://m.popkey.co/2cdaa7/RkoYd_s-200x150.gif>");
+                //loading gif 5/25
+                console.log(inputValue);
+                event.preventDefault();
+                $.ajax({
+                    url: `http://itunes.apple.com/search?term=${inputValue}`,
+                    dataType: 'JSONP'
+                })
+                    .done(function (data) {
+                        $('#results').html("");
+                        //added page results.
+                        console.log(data);
+                        // add code for when response from apple comes back.
+                        for (var i = 0; i < data.results.length; i++) {
+                            if (data.results[i].trackName) {
+                                $('#results').append(`<li>
+                                                        ${data.results[i].trackName} <br>
+                                                        <audio controls>
+                                                            <source src="${data.results[i].previewUrl}" type="audio/mp4">
+                                                        <audio>                                                     
+                                                        </li>`) //loads audio sample.
+                            }
+
+                            $('#name').val('');
+                        }
+                    })
+                    .fail(function (data) {
+                        $('#results').html("");
+                        //removes loading image and list error message.
+                        $('#results').append(`<li>"Error"</li>`)
+                        console.log(data);
+                        // add code for when the data fails to come back.
+                    })
+            };// End of on ready part
+        </script>
+</body>
+
+</html>
